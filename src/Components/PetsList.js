@@ -1,8 +1,24 @@
+import { useState } from "react";
 import pets from "../petsData";
 import PetItem from "./PetItem";
 
 function PetsList() {
-  const petList = pets.map((pet) => <PetItem pet={pet} key={pet.id} />);
+  const [type, setType] = useState("");
+  const select = (e) => {
+    setType(e.target.value);
+  };
+  const [query, setQuery] = useState("");
+  const search = (e) => {
+    setQuery(e.target.value);
+  };
+  console.log(query);
+
+  const petList = pets
+    .filter((pet) =>
+      pet.name.toLocaleLowerCase().includes(query.toLocaleLowerCase())
+    )
+    .filter((pet) => pet.type.includes(type))
+    .map((pet) => <PetItem pet={pet} key={pet.id} />);
 
   return (
     <section id="doctors" className="doctor-section pt-140">
@@ -20,11 +36,12 @@ function PetsList() {
                   placeholder="Search"
                   aria-label="Search"
                   aria-describedby="search-addon"
+                  onChange={search}
                 />
               </div>
               <br />
               Type:
-              <select className="form-select">
+              <select className="form-select" onChange={select}>
                 <option value="" selected>
                   All
                 </option>
